@@ -1,4 +1,6 @@
 const MESSAGES = require('../lang/en/messages');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Fetches the current date and time, and returns a message
@@ -19,15 +21,17 @@ function fetchDate(name) {
     }
 }
 
+/**
+ * Appends a text query parameter to a file named file.txt
+ * @param {String} message, text to be appended to the file
+ * @returns {Promise} - is resolved if writing was a success; else is rejected
+ */
 function appendToFile(message) {
-    const fs = require('fs');
-    const path = require('path');
-
     const filePath = path.join(__dirname, '..', 'file.txt');
 
     // Sinec fs.appendFile is asynchronous, we need to return a promise
     return new Promise((resolve, reject) => {
-        fs.appendFile(filePath, message + ' ', (err) => {
+        fs.appendFile(filePath, message + ' ', (err) => { // append the message + whitespace
             if (err) {
                 reject(err);
             } else {
@@ -36,5 +40,22 @@ function appendToFile(message) {
         });
     });
 }
+/**
+ * Reads content from a specified file
+ * @param {String} fileName, name of the file to read from
+ * @returns {Promise} - is resolved with file content if reading was a success; else is rejected
+ * */
+function readFromFile(fileName) {
+    const filePath = path.join(__dirname, '..', fileName);
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
 
-module.exports = { fetchDate, appendToFile };
+module.exports = { fetchDate, appendToFile, readFromFile };
