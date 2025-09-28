@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const { fetchDate } = require('./modules/utils');
+const { fetchDate, appendToFile, readFromFile } = require('./modules/utils');
 const MESSAGES = require('./lang/en/messages');
 const PORT = process.env.PORT || 3000;
 
@@ -17,14 +17,15 @@ const server = http.createServer((req, res) => {
         res.end(`<p style="color:blue">${msg}</p>`);
 
 
-    } else if (path.startsWith('/COMP4537/labs/3/writeFile') || path.startsWith('/COMP4537/labs/3/writeFile/')) { // PT 3.A
+    } else if (path.startsWith('/COMP4537/labs/3/writeFile')) { // PT 3.A
         if (text) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
             appendToFile(text)
                 .then(() => {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
                     res.end(`<p style="color:blue">${MESSAGES.FILE_WRITTEN}</p>`);
                 })
                 .catch(() => {
+                    res.writeHead(404, { 'Content-Type': 'text/html' });
                     res.end(`<p style="color:red">${MESSAGES.FILE_WRITE_ERROR}</p>`);
                 });
         } else {
@@ -32,13 +33,19 @@ const server = http.createServer((req, res) => {
             res.end(`<p style="color:red">${MESSAGES.NO_WRITE_MSG}</p>`);
         }
 
-
-    } else if (path.startsWith('/COMP4537/labs/3/readFile/') || path.startsWith('/COMP4537/labs/3/readFile')) { // PT 3.B
-
+    } else if (path.startsWith('/COMP4537/labs/3/readFile/')) { // PT 3.B
+        const filename = path.split('/').pop()
+        readFromFile(filename)
+            .then((text) => {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end(`<p style="color:blue">Reading from ${filename}: <br>${text}</p>`);
+            })
+            .catch(() => {
+                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.end(`<p style="color:red">${MESSAGES.FILE_NOT_FOUND.replace('{filename}', filename)}.</p>`);
+            });
+        return;
     }
-
-    res.writeHead(404, { 'Content-Type': 'text/html' });
-    res.end(`<p style="color:red">${MESSAGES.NOT_FOUND}</p>`);
 
 });
 
