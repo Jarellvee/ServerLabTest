@@ -19,4 +19,22 @@ function fetchDate(name) {
     }
 }
 
-module.exports = { fetchDate };
+function appendToFile(message) {
+    const fs = require('fs');
+    const path = require('path');
+
+    const filePath = path.join(__dirname, '..', 'file.txt');
+
+    // Sinec fs.appendFile is asynchronous, we need to return a promise
+    return new Promise((resolve, reject) => {
+        fs.appendFile(filePath, message + ' ', (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+module.exports = { fetchDate, appendToFile };
