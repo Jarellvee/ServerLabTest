@@ -45,6 +45,9 @@ const server = http.createServer((req, res) => {
                 res.end(`<p style="color:red">${MESSAGES.FILE_NOT_FOUND.replace('{filename}', filename)}.</p>`);
             });
         return;
+    } else {
+        res.writeHead(404, { 'Content-Type': 'text/html' });
+        res.end(`<p style="color:red">${MESSAGES.NOT_FOUND}</p>`);
     }
 
 });
