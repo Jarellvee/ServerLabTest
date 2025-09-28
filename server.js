@@ -11,8 +11,8 @@ const server = http.createServer((req, res) => {
     const name = query.name;
 
     if (path === '/COMP4537/labs/3/getDate/' || path === '/COMP4537/labs/3/getDate') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        const msg = fetchDate(name);
+        res.writeHead(200, { 'Content-Type': 'text/html' }); // to tell that were sending html not plaintxt
+        const msg = fetchDate(name); // calls the function from utils.js
         res.end(`<p style="color:blue">${msg}</p>`);
     } else {
         res.writeHead(404, { 'Content-Type': 'text/html' });
