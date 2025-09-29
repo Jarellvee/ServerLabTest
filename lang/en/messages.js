@@ -5,6 +5,7 @@ const MESSAGES = {
     FILE_WRITTEN: "File writing was successful, check with readFile endpoint",
     NO_WRITE_MSG: "No input provided, please include an input in the query",
     FILE_WRITE_ERROR: "There was an error writing to the file, please try again",
-    FILE_NOT_FOUND: "The file {filename} was not found, ensure the file name is file.txt"
+    FILE_NOT_FOUND: "The file {filename} was not found, ensure the file name is file.txt",
+    READING_FROM: "Reading from {filename}: {text}"
 };
 module.exports = MESSAGES;
